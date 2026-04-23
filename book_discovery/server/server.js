@@ -9,9 +9,22 @@ const allowedOrigins = [
     'http://localhost:5173',
 ].filter(Boolean);
 
+const isAllowedOrigin = (origin) => {
+    if (!origin || allowedOrigins.length === 0 || allowedOrigins.includes(origin)) {
+        return true;
+    }
+
+    try {
+        const { hostname } = new URL(origin);
+        return hostname.endsWith('.vercel.app');
+    } catch {
+        return false;
+    }
+};
+
 app.use(cors({
     origin: (origin, callback) => {
-        if (!origin || allowedOrigins.length === 0 || allowedOrigins.includes(origin)) {
+        if (isAllowedOrigin(origin)) {
             return callback(null, true);
         }
 
