@@ -20,7 +20,7 @@ exports.register = (req, res) => {
         const hashedPassword = bcrypt.hashSync(password, 10);
         const normalizedEmail = email.trim().toLowerCase();
 
-        const query = 'INSERT INTO users (email, password_hash) VALUES (?, ?)';
+        const query = 'INSERT INTO users (email, password_hash) VALUES (?, ?) RETURNING id';
         db.query(query, [normalizedEmail, hashedPassword], (err, result) => {
             if (err) {
                 console.error('Error registering user:', err);

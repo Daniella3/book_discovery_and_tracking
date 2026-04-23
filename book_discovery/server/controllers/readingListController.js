@@ -20,7 +20,7 @@ exports.addBook = (req, res) => {
             return res.status(200).json({ message: 'Book already in reading list', bookId: existingResults[0].id });
         }
 
-        const query = 'INSERT INTO reading_list (user_id, google_book_id, title, author, thumbnail) VALUES (?, ?, ?, ?, ?)';
+        const query = 'INSERT INTO reading_list (user_id, google_book_id, title, author, thumbnail) VALUES (?, ?, ?, ?, ?) RETURNING id';
         db.query(query, [userId, google_book_id, title, author, thumbnail], (err, result) => {
             if (err) {
                 console.error('Error adding book to reading list:', err);
