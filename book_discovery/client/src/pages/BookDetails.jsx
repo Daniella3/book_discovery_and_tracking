@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { addBookToReadingList, getBookById } from '../services/api';
+import placeholderImage from '../assets/image-placeholder.svg';
 
 const getStoredNote = (bookId) => localStorage.getItem(`book-note:${bookId}`) || '';
 
@@ -72,7 +73,15 @@ const BookDetails = () => {
               >
                 Back
               </button>
-              <img src={book.thumbnail} alt={book.title} className="w-full rounded-2xl object-cover shadow-sm" />
+              <img
+                src={book.thumbnail || placeholderImage}
+                alt={book.title}
+                onError={(event) => {
+                    event.currentTarget.onerror = null;
+                    event.currentTarget.src = placeholderImage;
+                }}
+                className="w-full rounded-2xl object-cover shadow-sm"
+              />
             </div>
 
             <div className="space-y-6">

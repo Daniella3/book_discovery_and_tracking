@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { addBookToReadingList } from "../services/api";
 import { useLocation, useNavigate } from "react-router-dom";
+import placeholderImage from "../assets/image-placeholder.svg";
 
 const BookCard = ({ book, onAdd, userId }) => {
     const [isAdding, setIsAdding] = useState(false);
@@ -37,8 +38,12 @@ const BookCard = ({ book, onAdd, userId }) => {
               className="cursor-pointer"
             >
                 <img
-                    src={book.thumbnail}
+                    src={book.thumbnail || placeholderImage }
                     alt={book.title}
+                    onError={(event) => {
+                        event.currentTarget.onerror = null;
+                        event.currentTarget.src = placeholderImage;
+                    }}
                     className="w-full h-56 object-cover group-hover:scale-105 transition duration-300"
                 />
             </div>
