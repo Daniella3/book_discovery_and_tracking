@@ -1,29 +1,44 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { loginUser } from "../services/api";
+import { loginDemoUser, loginUser } from "../services/api";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const completeLogin = (data) => {
+    if (!data?.token) {
+      alert("Invalid login");
+      return;
+    }
+
+    localStorage.setItem("token", data.token);
+    localStorage.setItem("userId", data.userId);
+    window.location.assign("/dashboard");
+  };
+
   const handleLogin = async () => {
     setIsSubmitting(true);
     try {
       const data = await loginUser(email, password);
-
-      if (data.token) {
-        localStorage.setItem("token", data.token);
-        localStorage.setItem("userId", data.userId);
-
-        window.location.assign("/dashboard");
-        return;
-      }
-
-      alert("Invalid login");
+      completeLogin(data);
     } catch (error) {
       console.error("Login error:", error);
       alert("Login failed. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleDemoLogin = async () => {
+    setIsSubmitting(true);
+    try {
+      const data = await loginDemoUser();
+      completeLogin(data);
+    } catch (error) {
+      console.error("Demo login error:", error);
+      alert(error.message || "Demo login failed. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
@@ -57,6 +72,14 @@ const Login = () => {
           className="w-full bg-black text-white py-2 rounded-lg hover:opacity-80 transition"
         >
           {isSubmitting ? "Logging in..." : "Login"}
+        </button>
+
+        <button
+          onClick={handleDemoLogin}
+          disabled={isSubmitting}
+          className="mt-3 w-full rounded-lg border border-[#694E4E] py-2 font-medium text-[#694E4E] transition hover:bg-[#FFF2E0]"
+        >
+          Try Demo
         </button>
 
         <p className="mt-4 text-sm">

@@ -146,6 +146,21 @@ export const loginUser = async (email, password) => {
   return data;
 };
 
+export const loginDemoUser = async () => {
+  const response = await fetch(`${BACKEND_URL}/auth/demo-login`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.error || `Failed to start demo: ${response.statusText}`);
+  }
+
+  return data;
+};
+
 export const logActivity = async ({ userId, activityType, activityData }) => {
   const response = await fetch(`${BACKEND_URL}/activity`, {
     method: "POST",
