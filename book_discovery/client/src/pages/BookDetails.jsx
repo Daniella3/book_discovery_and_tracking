@@ -15,6 +15,7 @@ const BookDetails = () => {
     const [note, setNote] = useState(() => (state?.book?.id ? getStoredNote(state.book.id) : ''));
     const [isAdding, setIsAdding] = useState(false);
     const [wasAdded, setWasAdded] = useState(false);
+    const [saveSuccess, setSaveSuccess] = useState(false);
     const backTarget = state?.from || "/search";
 
     useEffect(() => {
@@ -49,6 +50,8 @@ const BookDetails = () => {
 
     const handleSaveNote = () => {
         localStorage.setItem(`book-note:${book.id}`, note);
+        setSaveSuccess(true);
+        setTimeout(() => setSaveSuccess(false), 2000);
     };
 
     const handleAddBook = async () => {
@@ -62,6 +65,7 @@ const BookDetails = () => {
             setIsAdding(false);
         }
     };
+
 
     return (
         <div className="min-h-screen bg-[#EEE6CA] px-4 py-10">
@@ -132,7 +136,7 @@ const BookDetails = () => {
                     onClick={handleSaveNote}
                     className="mt-4 rounded-full bg-gray-900 px-5 py-2 text-sm font-semibold text-white"
                   >
-                    Save Note
+                    {saveSuccess ? "Saved!" : "Save Note"}
                   </button>
                 </div>
               ) : (
