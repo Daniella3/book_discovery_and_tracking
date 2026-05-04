@@ -6,7 +6,7 @@ This project was built to feel more like a personal reading space than a plain c
 
 ## Live Demo
 
-- Frontend: https://book-discovery-and-tracking.vercel.app/search
+- Frontend: https://book-discovery-and-tracking.vercel.app/
 - Backend API: https://book-discovery-and-tracking.onrender.com
 
 ## Features
