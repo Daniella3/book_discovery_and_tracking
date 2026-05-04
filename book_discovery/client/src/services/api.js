@@ -1,5 +1,13 @@
 const BACKEND_URL = import.meta.env.VITE_API_URL;
 
+export const warmBackend = async () => {
+  try {
+    await fetch(BACKEND_URL.replace(/\/api$/, ""), { method: "GET" });
+  } catch (error) {
+    console.error("Error warming backend:", error);
+  }
+};
+
 const getAuthHeaders = () => {
   const token = localStorage.getItem("token");
 

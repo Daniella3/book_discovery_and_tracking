@@ -1,12 +1,18 @@
+import { useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import Dashboard from "./pages/Dashboard";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import BookDetails from "./pages/BookDetails";
 import Search from "./pages/Search";
+import { warmBackend } from "./services/api";
 
 function App() {
   const userId = localStorage.getItem("userId");
+
+  useEffect(() => {
+    warmBackend();
+  }, []);
 
   return (
     <Router>

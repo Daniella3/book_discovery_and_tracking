@@ -7,16 +7,22 @@ const port = Number(process.env.PORT) || 5001;
 const allowedOrigins = [
     process.env.CLIENT_ORIGIN,
     'http://localhost:5173',
-].filter(Boolean);
+].filter(Boolean).map((origin) => origin.replace(/\/$/, ''));
 
 const isAllowedOrigin = (origin) => {
-    if (!origin || allowedOrigins.length === 0 || allowedOrigins.includes(origin)) {
+    if (!origin || allowedOrigins.length === 0) {
         return true;
     }
 
     try {
-        const { hostname } = new URL(origin);
-        return hostname.endsWith('.vercel.app');
+        const normalizedOrigin = origin.replace(/\/$/, '');
+
+        if (allowedOrigins.includes(normalizedOrigin)) {
+            return true;
+        }
+
+        const { hostname } = new URL(normalizedOrigin);
+        return hostname === 'localhost' || hostname === '127.0.0.1' || hostname.endsWith('.vercel.app');
     } catch {
         return false;
     }
