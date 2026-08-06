@@ -32,7 +32,7 @@ This project was built to feel more like a personal reading space than a plain c
 - Database: PostgreSQL
 - Authentication: bcrypt, JSON Web Tokens
 - External data source: Open Library API
-- Deployment: Vercel (frontend), Render (backend + PostgreSQL)
+- Deployment: Vercel (frontend), Render (backend), Supabase PostgreSQL (database)
 
 ## Project Structure
 
@@ -73,6 +73,7 @@ Create a `.env` file in `book_discovery/server`:
 
 ```env
 DATABASE_URL=your_local_or_hosted_postgres_url
+DB_SSL=true
 JWT_SECRET=your_jwt_secret
 CLIENT_ORIGIN=http://localhost:5173
 ```
@@ -109,18 +110,39 @@ npm run dev
 
 ## Deployment
 
+### Database on Supabase
+
+This app uses PostgreSQL through the `pg` package, so Supabase can replace Render PostgreSQL without changing the route/controller code.
+
+1. Create a Supabase project.
+2. In Supabase, go to **Project Settings > Database** and copy the pooled Postgres connection string for Render. It usually uses a `pooler.supabase.com` host. Use the direct `db.<project-ref>.supabase.co` connection string only when your environment supports it.
+3. Replace `[YOUR-PASSWORD]` in the connection string with your database password.
+4. Run the SQL schema from `book_discovery/server/db.sql` in the Supabase SQL editor.
+
+Use these backend environment variables:
+
+```env
+DATABASE_URL=your_supabase_postgres_connection_string
+DB_SSL=true
+JWT_SECRET=your_jwt_secret
+CLIENT_ORIGIN=https://your-vercel-site.vercel.app
+```
+
+If you have an export from the old Render database, restore that data into Supabase after creating the schema.
+
 ### Backend on Render
 
 - Deploy the `book_discovery/server` directory as a web service
 - Add environment variables:
 
 ```env
-DATABASE_URL=your_render_postgres_internal_database_url
+DATABASE_URL=your_supabase_postgres_connection_string
+DB_SSL=true
 JWT_SECRET=your_jwt_secret
 CLIENT_ORIGIN=https://your-vercel-site.vercel.app
 ```
 
-- Run the schema in `book_discovery/server/db.sql` against your Render PostgreSQL database
+- The backend can stay on Render; only the database URL needs to point to Supabase
 
 ### Frontend on Vercel
 
@@ -128,7 +150,7 @@ CLIENT_ORIGIN=https://your-vercel-site.vercel.app
 - Add:
 
 ```env
-VITE_API_URL=https://your-render-backend.onrender.com/api
+VITE_API_URL=https://your-backend-url.onrender.com/api
 ```
 
 - The frontend includes a `vercel.json` rewrite so React Router routes work correctly on refresh

@@ -1,4 +1,4 @@
-CREATE TABLE users (
+CREATE TABLE IF NOT EXISTS users (
     id SERIAL PRIMARY KEY,
     email VARCHAR(255) NOT NULL UNIQUE,
     password_hash VARCHAR(255) NOT NULL,
@@ -8,7 +8,7 @@ CREATE TABLE users (
     created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE email_verification_tokens (
+CREATE TABLE IF NOT EXISTS email_verification_tokens (
     id SERIAL PRIMARY KEY,
     user_id INT NOT NULL,
     token_hash VARCHAR(255) NOT NULL,
@@ -19,7 +19,7 @@ CREATE TABLE email_verification_tokens (
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
-CREATE TABLE reading_list (
+CREATE TABLE IF NOT EXISTS reading_list (
     id SERIAL PRIMARY KEY,
     user_id INT,
     google_book_id VARCHAR(255) NOT NULL,
@@ -33,7 +33,7 @@ CREATE TABLE reading_list (
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
-CREATE TABLE user_activity (
+CREATE TABLE IF NOT EXISTS user_activity (
     id SERIAL PRIMARY KEY,
     user_id INT,
     activity_type VARCHAR(30) NOT NULL CHECK (activity_type IN ('search', 'view_book', 'add_to_reading_list')),
