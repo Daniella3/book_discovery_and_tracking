@@ -73,7 +73,7 @@ const Login = () => {
         >
           {isSubmitting ? (
             <span className="inline-flex items-center justify-center gap-2">
-               <span>Logging in...</span>
+              <span>Logging in...</span>
               <svg
                 aria-hidden="true"
                 className="w-4 h-4 animate-spin text-white/40 fill-white"

@@ -43,7 +43,7 @@ const handleAuthFailure = async (response) => {
   return response;
 };
 
-export const searchBooks = async ({ query, genre, maxResults = 30 }) => {
+export const searchBooks = async ({ query, genre, maxResults = 1000 }) => {
   try {
     const searchQuery = [query, genre].filter(Boolean).join(" ").trim();
     const response = await fetch(`${BACKEND_URL}/catalog/search?q=${encodeURIComponent(searchQuery)}&maxResults=${maxResults}`);

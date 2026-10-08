@@ -147,9 +147,9 @@ const BookDetails = () => {
                   </p>
                   <Link
                     to="/login"
-                    className="mt-4 inline-flex rounded-full bg-[#C1CFA1] px-5 py-2 text-sm font-semibold text-black"
+                    className="mt-4 inline-flex rounded-full bg-[#C1CFA1] px-4 py-2 text-sm font-semibold text-black"
                   >
-                    Login to Save Progress
+                    Login
                   </Link>
                 </div>
               )}

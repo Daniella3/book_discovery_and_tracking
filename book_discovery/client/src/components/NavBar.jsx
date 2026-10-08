@@ -10,7 +10,7 @@ const NavBar = ({ userId, setUserId }) => {
             StoryTeller
         </h1>
 
-        <div className="flex items-center gap-6 text-sm font-medium">
+        <div className="flex items-center gap-4 text-sm font-medium">
             {userId && (
             <>
               <Link to="/dashboard" className="hover:text-rose-300 transition">
@@ -19,20 +19,22 @@ const NavBar = ({ userId, setUserId }) => {
             </>
             )}
             
-            <Link to="/search" className="hover:text-rose-300 transition">
+            {/* <Link to="/search" className="hover:text-rose-300 transition">
             Search
-            </Link>
+            </Link> */}
 
             
 
             {!userId ? (
             <>
-              <Link to="/login" className="hover:text-rose-300 transition">
-                  Login
+              <Link to="/login" className="bg-[#FFC6C6] text-[#694E4E] px-4 py-1.5 rounded-lg">
+                  Login / Demo
               </Link>
-              <Link to="/register" className="bg-[#FFC6C6] text-[#694E4E] px-4 py-1.5 rounded-lg">
+
+              {/* <Link to="/register" className="bg-[#FFC6C6] text-[#694E4E] px-4 py-1.5 rounded-lg">
                   Register
-              </Link>
+              </Link> */}
+              
             </>
             ) : (
             <button
