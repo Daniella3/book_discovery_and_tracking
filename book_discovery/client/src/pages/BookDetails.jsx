@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
-import { addBookToReadingList, getBookById } from '../services/api';
+import {addBookToReadingList, getBookById } from '../services/api';
 import placeholderImage from '../assets/image-placeholder.svg';
 
 const getStoredNote = (bookId) => localStorage.getItem(`book-note:${bookId}`) || '';

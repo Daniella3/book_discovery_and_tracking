@@ -122,6 +122,7 @@ const ReadingList = ({ userId, refresh, onBooksChange, showHeading = true }) => 
                                 Progress
                                 <input
                                     type="range"
+                                    class="accent-[#4C5C2D]"
                                     min="0"
                                     max="100"
                                     value={book.progress ?? 0}

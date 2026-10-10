@@ -5,13 +5,18 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import BookDetails from "./pages/BookDetails";
 import Search from "./pages/Search";
+import { useAuth } from "./context/AuthContext";
 import { warmBackend } from "./services/api";
 
+const KEEP_ALIVE_INTERVAL_MS = 8 * 60 * 1000;
+
 function App() {
-  const userId = localStorage.getItem("userId");
+  const { userId } = useAuth();
 
   useEffect(() => {
     warmBackend();
+    const keepAlive = setInterval(warmBackend, KEEP_ALIVE_INTERVAL_MS);
+    return () => clearInterval(keepAlive);
   }, []);
 
   return (

@@ -158,9 +158,9 @@ const Dashboard = () => {
                             </div>
                             <span className="text-sm font-semibold">{book.progress || 0}%</span>
                           </div>
-                          <div className="mt-3 h-2 rounded-full bg-zinc-700">
+                          <div className="mt-3 h-2 rounded-full bg-[#E5BEB5]">
                             <div
-                              className="h-2 rounded-full bg-gradient-to-r from-rose-500 to-orange-400"
+                              className="h-2 rounded-full bg-[#4C5C2D]"
                               style={{ width: `${book.progress || 0}%` }}
                             />
                           </div>

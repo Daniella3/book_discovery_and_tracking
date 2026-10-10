@@ -2,11 +2,25 @@ const db = require('../config/db');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
+const { seedDemoAccount } = require('../services/demoSeed');
 
 const SECRET = process.env.JWT_SECRET;
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const DEMO_EMAIL_PREFIX = process.env.DEMO_EMAIL_PREFIX;
 const DEMO_PASSWORD = process.env.DEMO_PASSWORD;
+let demoPasswordHash = null;
+
+const getDemoPasswordHash = () => {
+    if (!DEMO_PASSWORD) {
+        throw new Error('DEMO_PASSWORD is not configured');
+    }
+
+    if (!demoPasswordHash) {
+        demoPasswordHash = bcrypt.hashSync(DEMO_PASSWORD, 10);
+    }
+
+    return demoPasswordHash;
+};
 
 const createToken = (userId) => jwt.sign({ userId }, SECRET, { expiresIn: '1h' });
 const createDemoEmail = () => {
@@ -82,23 +96,26 @@ exports.login = (req, res) => {
     });
 };
 
-exports.demoLogin = (req, res) => {
+exports.demoLogin = async (req, res) => {
     try {
-        const hashedPassword = bcrypt.hashSync(DEMO_PASSWORD, 10);
+        const hashedPassword = getDemoPasswordHash();
         const demoEmail = createDemoEmail();
-        const insertQuery = 'INSERT INTO users (email, password_hash) VALUES (?, ?) RETURNING id';
+        const result = await db.query(
+            'INSERT INTO users (email, password_hash) VALUES (?, ?) RETURNING id',
+            [demoEmail, hashedPassword]
+        );
+        const userId = result.insertId;
 
-        db.query(insertQuery, [demoEmail, hashedPassword], (insertErr, result) => {
-            if (insertErr) {
-                console.error('Error creating demo user:', insertErr);
-                return res.status(500).json({ error: 'Failed to start demo' });
-            }
+        try {
+            await seedDemoAccount(userId);
+        } catch (seedError) {
+            console.error('Error seeding demo library:', seedError);
+        }
 
-            return res.json({
-                token: createToken(result.insertId),
-                userId: result.insertId,
-                demo: true,
-            });
+        return res.json({
+            token: createToken(userId),
+            userId,
+            demo: true,
         });
     } catch (error) {
         console.error('Error provisioning demo user:', error);

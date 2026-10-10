@@ -1,10 +1,41 @@
 const BACKEND_URL = import.meta.env.VITE_API_URL;
 
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+export const waitForBackend = async ({ timeoutMs = 90000 } = {}) => {
+  const healthUrl = BACKEND_URL.replace(/\/api$/, "");
+  const startedAt = Date.now();
+  let delayMs = 1000;
+
+  while (Date.now() - startedAt < timeoutMs) {
+    const controller = new AbortController();
+    const abortTimer = setTimeout(() => controller.abort(), 8000);
+
+    try {
+      const response = await fetch(healthUrl, { method: "GET", signal: controller.signal });
+      if (response.ok) {
+        return true;
+      }
+    } catch (error) {
+      console.error("Waiting for backend:", error);
+    } finally {
+      clearTimeout(abortTimer);
+    }
+
+    await sleep(delayMs);
+    delayMs = Math.min(delayMs * 1.5, 5000);
+  }
+
+  return false;
+};
+
 export const warmBackend = async () => {
   try {
     await fetch(BACKEND_URL.replace(/\/api$/, ""), { method: "GET" });
+    return true;
   } catch (error) {
     console.error("Error warming backend:", error);
+    return false;
   }
 };
 
@@ -34,6 +65,7 @@ const handleAuthFailure = async (response) => {
   if (errorCode === "TOKEN_EXPIRED" || errorCode === "INVALID_TOKEN") {
     localStorage.removeItem("token");
     localStorage.removeItem("userId");
+    window.dispatchEvent(new Event("auth:expired"));
 
     if (window.location.pathname !== "/search") {
       window.location.href = "/search";

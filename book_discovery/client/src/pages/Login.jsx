@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { loginDemoUser, loginUser } from "../services/api";
+import { useAuth } from "../context/AuthContext";
 
 const Login = () => {
+  const { login } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -13,8 +15,7 @@ const Login = () => {
       return;
     }
 
-    localStorage.setItem("token", data.token);
-    localStorage.setItem("userId", data.userId);
+    login(data);
     window.location.assign("/dashboard");
   };
 

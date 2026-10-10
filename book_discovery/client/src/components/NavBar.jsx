@@ -27,7 +27,7 @@ const NavBar = ({ userId, setUserId }) => {
 
             {!userId ? (
             <>
-              <Link to="/login" className="bg-[#FFC6C6] text-[#694E4E] px-4 py-1.5 rounded-lg">
+              <Link to="/login" className="bg-[#E5BEB5] text-[#562F00] px-4 py-1.5 rounded-lg">
                   Login / Demo
               </Link>
 
